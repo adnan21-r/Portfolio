@@ -57,7 +57,11 @@
                 '--delay': index * 0.1 + 's'
               }"
             >
-              <img :src="`https://cdn.simpleicons.org/${tool.slug}/white`" :alt="tool.name" class="tool-logo" />
+              <img 
+                :src="tool.slug === 'visualstudiocode' ? 'https://cdn.simpleicons.org/visualstudiocode/007ACC' : `https://cdn.simpleicons.org/${tool.slug}/white`" 
+                :alt="tool.name" 
+                class="tool-logo" 
+              />
               <span class="tool-name">{{ tool.name }}</span>
             </div>
           </div>
