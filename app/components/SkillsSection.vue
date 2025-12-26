@@ -10,7 +10,7 @@
         <div class="skill-category" v-for="(cat, key) in categories" :key="key">
           <div class="category-header">
             <div class="category-icon" :style="{ background: cat.gradient }">
-              <span>{{ cat.icon }}</span>
+              <img :src="`https://cdn.simpleicons.org/${cat.iconName}/white`" :alt="cat.title" class="cat-logo" />
             </div>
             <div class="category-info">
               <h3>{{ cat.title }}</h3>
@@ -57,7 +57,7 @@
                 '--delay': index * 0.1 + 's'
               }"
             >
-              <span class="tool-icon">{{ tool.icon }}</span>
+              <img :src="`https://cdn.simpleicons.org/${tool.slug}/white`" :alt="tool.name" class="tool-logo" />
               <span class="tool-name">{{ tool.name }}</span>
             </div>
           </div>
@@ -71,19 +71,19 @@
 const categories = {
   languages: {
     title: 'Programming Languages',
-    icon: '💻',
+    iconName: 'codeforces',
     gradient: 'linear-gradient(135deg, #a855f7, #7c3aed)',
     skills: [
       { name: 'PHP', level: 95 },
       { name: 'JavaScript', level: 88 },
       { name: 'Python', level: 75 },
       { name: 'Java', level: 70 },
-      { name: 'HTML/CSS', level: 92 },
+      { name: 'HTML5/CSS3', level: 92 },
     ]
   },
   frameworks: {
     title: 'Frameworks & Libraries',
-    icon: '⚡',
+    iconName: 'vuedotjs',
     gradient: 'linear-gradient(135deg, #22d3ee, #0891b2)',
     skills: [
       { name: 'Laravel', level: 95 },
@@ -94,7 +94,7 @@ const categories = {
   },
   backend: {
     title: 'Backend & Database',
-    icon: '🔧',
+    iconName: 'serverless',
     gradient: 'linear-gradient(135deg, #4ade80, #16a34a)',
     skills: [
       { name: 'RESTful APIs', level: 92 },
@@ -106,14 +106,14 @@ const categories = {
 };
 
 const tools = [
-  { name: 'Git', icon: '📦' },
-  { name: 'VS Code', icon: '💎' },
-  { name: 'Postman', icon: '📮' },
-  { name: 'Docker', icon: '🐳' },
-  { name: 'MySQL Workbench', icon: '🗄️' },
-  { name: 'Figma', icon: '🎨' },
-  { name: 'Linux', icon: '🐧' },
-  { name: 'Android Studio', icon: '📱' },
+  { name: 'Git', slug: 'git' },
+  { name: 'VS Code', slug: 'visualstudiocode' },
+  { name: 'Postman', slug: 'postman' },
+  { name: 'Docker', slug: 'docker' },
+  { name: 'MySQL', slug: 'mysql' },
+  { name: 'Figma', slug: 'figma' },
+  { name: 'PHP', slug: 'php' },
+  { name: 'Python', slug: 'python' },
 ];
 </script>
 
@@ -292,8 +292,16 @@ const tools = [
   transform: rotate(var(--angle)) translateX(180px) rotate(calc(-1 * var(--angle))) scale(1.1);
 }
 
-.tool-icon {
-  font-size: 1.5rem;
+.cat-logo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.tool-logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
 }
 
 .tool-name {

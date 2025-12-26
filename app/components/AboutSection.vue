@@ -26,7 +26,7 @@
   "education": {
     "degree": "BS Computer Engineering",
     "university": "Lebanese International University",
-    "gpa": "3.3/4.0"
+    "gpa": "3.5/4.0"
   },
   "current_role": "Software Developer @ Orion Dev",
   "focus": [
@@ -45,9 +45,15 @@
             </div>
             
             <div class="floating-elements">
-              <div class="float-element el-1">PHP</div>
-              <div class="float-element el-2">Vue</div>
-              <div class="float-element el-3">API</div>
+              <div class="float-element el-1">
+                <img src="https://cdn.simpleicons.org/php/white" alt="PHP" />
+              </div>
+              <div class="float-element el-2">
+                <img src="https://cdn.simpleicons.org/vuedotjs/white" alt="Vue" />
+              </div>
+              <div class="float-element el-3">
+                <img src="https://cdn.simpleicons.org/laravel/white" alt="Laravel" />
+              </div>
             </div>
           </div>
         </div>
@@ -62,7 +68,7 @@
           <p class="about-text">
             I'm a dedicated Software Developer with a passion for building systems that 
             make a difference. Currently pursuing my BS in Computer Engineering at 
-            <strong>Lebanese International University</strong> with a <strong>3.3 GPA</strong>, 
+            <strong>Lebanese International University</strong> with a <strong>3.5 GPA</strong>, 
             I combine strong academic foundations with real-world development experience.
           </p>
 
@@ -79,7 +85,7 @@
               </div>
               <h4>Education</h4>
               <p>BS Computer Engineering</p>
-              <span class="card-sub">LIU • GPA 3.3/4.0</span>
+              <span class="card-sub">LIU • GPA 3.5/4.0</span>
             </div>
 
             <div class="about-card glass-card">
@@ -231,14 +237,22 @@
 
 .float-element {
   position: absolute;
-  padding: 0.5rem 1rem;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: var(--bg-glass);
   border: 1px solid var(--border-subtle);
-  border-radius: 0.5rem;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  font-weight: 600;
+  border-radius: 0.75rem;
   animation: float-around 6s ease-in-out infinite;
+  padding: 10px;
+}
+
+.float-element img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .el-1 {

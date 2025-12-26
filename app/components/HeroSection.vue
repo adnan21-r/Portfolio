@@ -31,7 +31,7 @@
           </div>
           <div class="stat-divider"></div>
           <div class="stat-item">
-            <span class="stat-number">3.3</span>
+            <span class="stat-number">3.5</span>
             <span class="stat-label">GPA • LIU</span>
           </div>
         </div>
@@ -70,15 +70,21 @@
 
       <div class="hero-visual">
         <div class="floating-card card-1">
-          <div class="card-icon">⚡</div>
+          <div class="card-icon">
+            <img src="https://cdn.simpleicons.org/laravel/white" alt="Laravel" class="hero-mini-logo" />
+          </div>
           <div class="card-text">Laravel Expert</div>
         </div>
         <div class="floating-card card-2">
-          <div class="card-icon">🎨</div>
+          <div class="card-icon">
+            <img src="https://cdn.simpleicons.org/vuedotjs/white" alt="Vue.js" class="hero-mini-logo" />
+          </div>
           <div class="card-text">Vue.js</div>
         </div>
         <div class="floating-card card-3">
-          <div class="card-icon">🔐</div>
+          <div class="card-icon">
+            <img src="https://cdn.simpleicons.org/jsonwebtokens/white" alt="Auth" class="hero-mini-logo" />
+          </div>
           <div class="card-text">Secure APIs</div>
         </div>
 
@@ -260,7 +266,15 @@
 }
 
 .card-icon {
-  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-mini-logo {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
 }
 
 .card-text {

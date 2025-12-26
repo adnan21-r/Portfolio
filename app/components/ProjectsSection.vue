@@ -18,7 +18,9 @@
           <div class="project-inner">
             <div class="project-front glass-card">
               <div class="project-visual" :style="{ background: project.gradient }">
-                <div class="project-icon">{{ project.icon }}</div>
+                <div class="project-icon">
+                  <img :src="`https://cdn.simpleicons.org/${project.iconSlug}/white`" :alt="project.title" class="proj-logo" />
+                </div>
                 <div class="project-number">0{{ index + 1 }}</div>
               </div>
               <div class="project-info">
@@ -75,7 +77,7 @@ const projects = [
     title: "E-Commerce Titan",
     tagline: "High-performance shopping experience",
     description: "Architected a complete end-to-end e-commerce solution with a focus on security and scalability. Implemented complex product variants and real-time inventory management.",
-    icon: "🛍️",
+    iconSlug: "shopware",
     gradient: "linear-gradient(135deg, #a855f7, #22d3ee)",
     tags: ["Laravel", "Vue.js", "Stripe", "MySQL"],
     results: ["100% Secure Checkout", "Under 2s Page Load", "Automated Invoicing"],
@@ -86,7 +88,7 @@ const projects = [
     title: "Crisis Control OS",
     tagline: "Real-time emergency management",
     description: "Developed a mission-critical system for donor family tracking and resource allocation. Features live geolocation tracking and instant communication protocols.",
-    icon: "🚨",
+    iconSlug: "googlemaps",
     gradient: "linear-gradient(135deg, #f472b6, #fbbf24)",
     tags: ["PHP", "JavaScript", "Google Maps", "WebSockets"],
     results: ["Real-time Geo-tracking", "Multi-user Coordination", "Instant Alerts"],
@@ -97,7 +99,7 @@ const projects = [
     title: "Portfolio Universe",
     tagline: "The one you are exploring",
     description: "An immersive 3D experience designed to showcase the intersection of engineering and art. Built with high-performance WebGL and modern Vue architecture.",
-    icon: "🌌",
+    iconSlug: "threedotjs",
     gradient: "linear-gradient(135deg, #4ade80, #3b82f6)",
     tags: ["Nuxt.js", "Three.js", "GSAP", "Custom GLSL"],
     results: ["Incomparable 3D UX", "Fully Responsive", "SEO Optimized"],
@@ -196,9 +198,19 @@ const handleMouseLeave = (index) => {
 }
 
 .project-icon {
-  font-size: 5rem;
-  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 1;
+}
+
+.proj-logo {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
 }
 
 .project-number {

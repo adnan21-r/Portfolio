@@ -15,14 +15,14 @@ let scrollY = 0;
 
 // Technology icons as 3D objects
 const techData = [
-  { symbol: 'PHP', color: 0x777BB4 },
-  { symbol: 'Vue', color: 0x42B883 },
-  { symbol: 'JS', color: 0xF7DF1E },
-  { symbol: 'SQL', color: 0x00758F },
-  { symbol: 'Git', color: 0xF05032 },
-  { symbol: 'API', color: 0xa855f7 },
-  { symbol: '<>', color: 0x22d3ee },
-  { symbol: '{}', color: 0xf472b6 },
+  { slug: 'php', color: 0x777BB4 },
+  { slug: 'vuedotjs', color: 0x42B883 },
+  { slug: 'javascript', color: 0xF7DF1E },
+  { slug: 'mysql', color: 0x00758F },
+  { slug: 'git', color: 0xF05032 },
+  { slug: 'laravel', color: 0xFF2D20 },
+  { slug: 'python', color: 0x3776AB },
+  { slug: 'amazons3', color: 0xa855f7 },
 ];
 
 const createParticleSystem = () => {
@@ -126,40 +126,45 @@ const createCodeBlock = (x, y, z, color) => {
   return group;
 };
 
+const textureLoader = new THREE.TextureLoader();
+
 const createFloatingIcon = (data, x, y, z) => {
   const group = new THREE.Group();
-
-  // Create text sprite
-  const canvas = document.createElement('canvas');
-  canvas.width = 256;
-  canvas.height = 256;
-  const ctx = canvas.getContext('2d');
-
-  // Gradient background circle
-  const gradient = ctx.createRadialGradient(128, 128, 0, 128, 128, 100);
-  gradient.addColorStop(0, `#${data.color.toString(16).padStart(6, '0')}40`);
-  gradient.addColorStop(1, 'transparent');
-  ctx.fillStyle = gradient;
-  ctx.beginPath();
-  ctx.arc(128, 128, 100, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Text
-  ctx.fillStyle = `#${data.color.toString(16).padStart(6, '0')}`;
-  ctx.font = 'bold 64px Fira Code, monospace';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(data.symbol, 128, 128);
-
-  const texture = new THREE.CanvasTexture(canvas);
+  const logoUrl = `https://cdn.simpleicons.org/${data.slug}/white`;
+  
+  const texture = textureLoader.load(logoUrl);
   const material = new THREE.SpriteMaterial({
     map: texture,
     transparent: true,
     blending: THREE.AdditiveBlending,
+    opacity: 0.8
   });
+  
   const sprite = new THREE.Sprite(material);
-  sprite.scale.set(2.5, 2.5, 1);
+  sprite.scale.set(2, 2, 1);
   group.add(sprite);
+
+  // Add a glow behind the logo
+  const canvas = document.createElement('canvas');
+  canvas.width = 64;
+  canvas.height = 64;
+  const ctx = canvas.getContext('2d');
+  const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+  gradient.addColorStop(0, `#${data.color.toString(16).padStart(6, '0')}40`);
+  gradient.addColorStop(1, 'transparent');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, 64, 64);
+  
+  const glowTexture = new THREE.CanvasTexture(canvas);
+  const glowMaterial = new THREE.SpriteMaterial({
+    map: glowTexture,
+    transparent: true,
+    blending: THREE.AdditiveBlending
+  });
+  const glowSprite = new THREE.Sprite(glowMaterial);
+  glowSprite.scale.set(4, 4, 1);
+  glowSprite.position.z = -0.1;
+  group.add(glowSprite);
 
   group.position.set(x, y, z);
   group.userData = {

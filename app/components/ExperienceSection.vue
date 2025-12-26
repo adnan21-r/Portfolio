@@ -25,7 +25,7 @@
               </div>
               <h3 class="job-title">{{ job.title }}</h3>
               <p class="job-company">
-                <span class="company-icon">🏢</span>
+                <Briefcase :size="16" class="company-icon" />
                 {{ job.company }}
               </p>
             </div>
@@ -50,6 +50,7 @@
 </template>
 
 <script setup>
+import { Briefcase } from 'lucide-vue-next';
 const jobs = [
   {
     title: 'Software Developer',
@@ -196,7 +197,7 @@ const jobs = [
 }
 
 .company-icon {
-  font-size: 1rem;
+  color: var(--primary);
 }
 
 /* Responsibilities */
