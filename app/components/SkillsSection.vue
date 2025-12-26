@@ -58,7 +58,7 @@
               }"
             >
               <img 
-                :src="tool.slug === 'visualstudiocode' ? 'https://cdn.simpleicons.org/visualstudiocode/007ACC' : `https://cdn.simpleicons.org/${tool.slug}/white`" 
+                :src="tool.slug === 'visualstudiocode' ? 'https://skillicons.dev/icons?i=vscode' : `https://cdn.simpleicons.org/${tool.slug}/white`" 
                 :alt="tool.name" 
                 class="tool-logo" 
               />
