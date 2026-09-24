@@ -277,6 +277,42 @@ h3 {
     transform: none;
 }
 
+/* Hero entrance sequence; each element sets its own --delay */
+[data-motion] .hero-fade {
+    opacity: 0;
+    animation: hero-in 0.8s var(--ease-out) forwards;
+    animation-delay: var(--delay, 0ms);
+}
+
+@keyframes hero-in {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Staggered children inside a revealed block (project features, skill items) */
+[data-motion] .project-features li,
+[data-motion] .stack-group li {
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+        opacity 0.5s var(--ease-out),
+        transform 0.5s var(--ease-out);
+    transition-delay: calc(var(--i, 0) * 60ms + 250ms);
+}
+
+[data-motion] .is-in .project-features li,
+[data-motion] .stack-group.is-in li {
+    opacity: 1;
+    transform: none;
+}
+
 /* Hero headline rises on load (words come from SplitWords, so this can't be scoped) */
 [data-motion] .hero-title .w > span {
     transform: translateY(110%);

@@ -98,18 +98,6 @@ const groups = [
   transform: none;
 }
 
-:global([data-motion]) .stack-group li {
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
-  transition-delay: calc(var(--i) * 40ms + 200ms);
-}
-
-:global([data-motion]) .stack-group.is-in li {
-  opacity: 1;
-  transform: none;
-}
-
 @media (max-width: 860px) {
   .stack-grid {
     grid-template-columns: 1fr;

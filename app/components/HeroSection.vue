@@ -230,18 +230,6 @@ onBeforeUnmount(clearTimers);
   border-color: var(--accent);
 }
 
-/* Entrance sequence */
-:global([data-motion]) .hero-fade {
-  opacity: 0;
-  animation: hero-in 0.8s var(--ease-out) forwards;
-  animation-delay: var(--delay, 0ms);
-}
-
-@keyframes hero-in {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: none; }
-}
-
 /* API client */
 .hero-side {
   min-width: 0;

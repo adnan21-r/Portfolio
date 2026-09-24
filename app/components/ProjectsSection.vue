@@ -131,18 +131,6 @@ const projects = [
   color: var(--accent);
 }
 
-:global([data-motion]) .project-features li {
-  opacity: 0;
-  transform: translateX(-8px);
-  transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
-  transition-delay: calc(var(--i) * 80ms + 300ms);
-}
-
-:global([data-motion]) .project.is-in .project-features li {
-  opacity: 1;
-  transform: none;
-}
-
 .project-main {
   padding: clamp(1.5rem, 3.5vw, 2.5rem);
   display: flex;
