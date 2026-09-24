@@ -1,48 +1,66 @@
 <template>
-  <nav class="navbar" :class="{ scrolled: isScrolled }">
+  <header class="navbar" :class="{ scrolled: isScrolled }">
     <div class="container nav-wrapper">
-      <a href="#" class="nav-logo">
-        <div class="logo-icon">
-          <span class="bracket">&lt;</span>
-          <span class="slash">/</span>
-          <span class="bracket">&gt;</span>
-        </div>
-        <span class="logo-name">Adnan<span class="dot">.</span></span>
+      <a href="#" class="nav-logo" translate="no" aria-label="Adnan Al Rakka, back to top">
+        adnan<span class="logo-sep">/</span>al-rakka
       </a>
 
-      <div class="nav-menu" :class="{ active: menuOpen }">
-        <a href="#about" class="nav-link" @click="closeMenu">About</a>
-        <a href="#experience" class="nav-link" @click="closeMenu">Experience</a>
-        <a href="#skills" class="nav-link" @click="closeMenu">Skills</a>
-        <a href="#projects" class="nav-link" @click="closeMenu">Projects</a>
-        <a href="#contact" class="btn btn-primary nav-cta" @click="closeMenu">
-          <span>Let's Connect</span>
+      <nav id="site-nav" class="nav-menu" translate="no" :class="{ open: menuOpen }" aria-label="Sections">
+        <a v-for="link in links" :key="link.href" :href="link.href" class="nav-link" @click="closeMenu">
+          <span class="method get">GET</span>{{ link.path }}
         </a>
-      </div>
+        <a href="#contact" class="nav-link nav-cta" @click="closeMenu">
+          <span class="method post">POST</span>/contact
+        </a>
+      </nav>
 
-      <button class="nav-toggle" :class="{ active: menuOpen }" @click="menuOpen = !menuOpen">
-        <span></span>
+      <button
+        class="nav-toggle"
+        :class="{ open: menuOpen }"
+        :aria-expanded="menuOpen"
+        aria-controls="site-nav"
+        aria-label="Toggle menu"
+        @click="menuOpen = !menuOpen"
+      >
         <span></span>
         <span></span>
       </button>
     </div>
-  </nav>
+  </header>
 </template>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+
+const links = [
+  { href: '#about', path: '/about' },
+  { href: '#experience', path: '/experience' },
+  { href: '#projects', path: '/projects' },
+  { href: '#skills', path: '/skills' },
+];
 
 const isScrolled = ref(false);
 const menuOpen = ref(false);
 
 const closeMenu = () => menuOpen.value = false;
 
-const handleScroll = () => {
-  isScrolled.value = window.scrollY > 50;
+const onKeydown = (e) => {
+  if (e.key === 'Escape') closeMenu();
 };
 
-onMounted(() => window.addEventListener('scroll', handleScroll));
-onBeforeUnmount(() => window.removeEventListener('scroll', handleScroll));
+const handleScroll = () => {
+  isScrolled.value = window.scrollY > 24;
+};
+
+onMounted(() => {
+  handleScroll();
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  window.addEventListener('keydown', onKeydown);
+});
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll);
+  window.removeEventListener('keydown', onKeydown);
+});
 </script>
 
 <style scoped>
@@ -52,16 +70,17 @@ onBeforeUnmount(() => window.removeEventListener('scroll', handleScroll));
   left: 0;
   right: 0;
   z-index: 1000;
-  padding: 1.5rem 0;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 1.1rem 0;
+  border-bottom: 1px solid transparent;
+  transition: background-color 0.3s ease, border-color 0.3s ease, padding 0.3s ease;
 }
 
 .navbar.scrolled {
-  padding: 1rem 0;
-  background: rgba(5, 5, 16, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border-subtle);
+  padding: 0.7rem 0;
+  background: rgba(237, 239, 242, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom-color: var(--rule);
 }
 
 .nav-wrapper {
@@ -71,139 +90,107 @@ onBeforeUnmount(() => window.removeEventListener('scroll', handleScroll));
 }
 
 .nav-logo {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.logo-icon {
-  display: flex;
-  align-items: center;
   font-family: var(--font-mono);
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 0.85rem;
+  font-weight: 500;
 }
 
-.bracket {
-  color: var(--primary);
-}
-
-.slash {
-  color: var(--secondary);
-}
-
-.logo-name {
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-
-.dot {
-  color: var(--primary);
+.logo-sep {
+  color: var(--accent);
+  margin: 0 0.1em;
 }
 
 .nav-menu {
   display: flex;
   align-items: center;
-  gap: 2.5rem;
+  gap: 0.25rem;
 }
 
 .nav-link {
-  font-weight: 500;
-  color: var(--text-secondary);
-  position: relative;
-  padding: 0.5rem 0;
-}
-
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--primary), var(--secondary));
-  transition: width 0.3s ease;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.45rem 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-2);
+  border-radius: 6px;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .nav-link:hover {
-  color: var(--text-primary);
-}
-
-.nav-link:hover::after {
-  width: 100%;
+  color: var(--ink);
+  background: var(--surface);
 }
 
 .nav-cta {
-  padding: 0.75rem 1.5rem;
-  font-size: 0.9rem;
+  margin-left: 0.5rem;
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.nav-cta:hover {
+  border-color: var(--ink);
 }
 
 .nav-toggle {
   display: none;
-  flex-direction: column;
-  justify-content: center;
-  gap: 5px;
-  width: 32px;
-  height: 32px;
+  position: relative;
+  width: 40px;
+  height: 40px;
   background: none;
-  border: none;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
   cursor: pointer;
   z-index: 1001;
 }
 
 .nav-toggle span {
-  width: 100%;
-  height: 2px;
-  background: var(--text-primary);
-  transition: all 0.3s ease;
-  transform-origin: center;
+  position: absolute;
+  left: 11px;
+  width: 16px;
+  height: 1.5px;
+  background: var(--ink);
+  transition: transform 0.25s ease, top 0.25s ease;
 }
 
-.nav-toggle.active span:nth-child(1) {
-  transform: rotate(45deg) translate(5px, 5px);
-}
+.nav-toggle span:nth-child(1) { top: 15px; }
+.nav-toggle span:nth-child(2) { top: 22px; }
+.nav-toggle.open span:nth-child(1) { top: 19px; transform: rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { top: 19px; transform: rotate(-45deg); }
 
-.nav-toggle.active span:nth-child(2) {
-  opacity: 0;
-}
-
-.nav-toggle.active span:nth-child(3) {
-  transform: rotate(-45deg) translate(5px, -5px);
-}
-
-@media (max-width: 900px) {
+@media (max-width: 860px) {
   .nav-toggle {
-    display: flex;
+    display: block;
   }
 
   .nav-menu {
     position: fixed;
-    top: 0;
-    right: -100%;
-    width: 100%;
-    max-width: 350px;
-    height: 100vh;
-    background: var(--bg-main);
+    inset: 0 0 auto 0;
+    padding: 5rem var(--gutter) 1.5rem;
     flex-direction: column;
-    justify-content: center;
-    gap: 2rem;
-    padding: 2rem;
-    border-left: 1px solid var(--border-subtle);
-    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    align-items: stretch;
+    gap: 0.25rem;
+    background: var(--canvas);
+    border-bottom: 1px solid var(--rule);
+    transform: translateY(-100%);
+    visibility: hidden;
+    transition: transform 0.3s ease, visibility 0.3s;
   }
 
-  .nav-menu.active {
-    right: 0;
+  .nav-menu.open {
+    transform: translateY(0);
+    visibility: visible;
   }
 
   .nav-link {
-    font-size: 1.25rem;
+    padding: 0.9rem 0.75rem;
+    font-size: 0.9rem;
   }
 
   .nav-cta {
-    width: 100%;
-    justify-content: center;
+    margin: 0.5rem 0 0;
   }
 }
 </style>

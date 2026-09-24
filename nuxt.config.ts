@@ -6,31 +6,26 @@ export default defineNuxtConfig({
     compatibilityVersion: 4,
   },
   css: ['~/assets/css/main.css'],
-  modules: ['nuxt-mail'],
-  mail: {
-    message: {
-      to: process.env.NUXT_MAIL_TO || 'placeholder@example.com',
-      from: process.env.NUXT_MAIL_FROM || 'placeholder@example.com'
-    },
-    smtp: {
-      host: process.env.NUXT_MAIL_SMTP_HOST || 'localhost',
-      port: Number(process.env.NUXT_MAIL_SMTP_PORT) || 587,
-      secure: process.env.NUXT_MAIL_SMTP_SECURE === 'true',
-      auth: {
-        user: process.env.NUXT_MAIL_SMTP_USER || '',
-        pass: process.env.NUXT_MAIL_SMTP_PASS || ''
-      }
-    }
-  },
   app: {
+    baseURL: process.env.NUXT_APP_BASE_URL || (process.env.GITHUB_ACTIONS ? '/Portfolio/' : '/'),
     head: {
-      title: 'Adnan Al Rakka | Software Developer Portfolio',
+      htmlAttrs: { lang: 'en' },
+      title: 'Adnan Al Rakka · Software Developer',
       meta: [
-        { name: 'description', content: 'Professional portfolio of Adnan Al Rakka, Software Developer specialized in Laravel, Vue.js and 3D web experiences.' }
+        { name: 'description', content: 'Adnan Al Rakka is a software developer in Lebanon building Laravel backends, REST APIs and Vue.js interfaces.' },
+        { name: 'theme-color', content: '#edeff2' },
+        { property: 'og:type', content: 'website' },
+        { property: 'og:title', content: 'Adnan Al Rakka · Software Developer' },
+        { property: 'og:description', content: 'Laravel backends, REST APIs and Vue.js interfaces.' },
+        { name: 'twitter:card', content: 'summary' }
       ],
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:wght@400..600&family=Martian+Mono:wght@400;500&display=swap' }
       ]
     }
-  }
+  },
+  modules: [],
 })

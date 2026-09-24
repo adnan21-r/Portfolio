@@ -1,307 +1,175 @@
 <template>
   <section id="projects" class="section">
     <div class="container">
-      <div class="section-header">
-        <span class="section-eyebrow">Creative Portfolio</span>
-        <h2 class="section-title">Innovative <span class="gradient-text">Project Gallery</span></h2>
+      <div class="section-head">
+        <p class="section-route" translate="no"><span class="method get">GET</span> /projects</p>
+        <h2 class="section-title">Selected work.</h2>
       </div>
 
-      <div class="projects-grid">
-        <div 
-          v-for="(project, index) in projects" 
-          :key="index" 
-          class="project-card-3d"
-          @mousemove="handleMouseMove($event, index)"
-          @mouseleave="handleMouseLeave(index)"
-          :ref="el => projectRefs[index] = el"
-        >
-          <div class="project-inner">
-            <div class="project-front glass-card">
-              <div class="project-visual" :style="{ background: project.gradient }">
-                <div class="project-icon">
-                  <img :src="`https://cdn.simpleicons.org/${project.iconSlug}/white`" :alt="project.title" class="proj-logo" />
-                </div>
-                <div class="project-number">0{{ index + 1 }}</div>
-              </div>
-              <div class="project-info">
-                <h3 class="project-name">{{ project.title }}</h3>
-                <p class="project-tagline">{{ project.tagline }}</p>
-                <div class="project-tags">
-                  <span v-for="tag in project.tags" :key="tag" class="small-tag">{{ tag }}</span>
-                </div>
-              </div>
-            </div>
+      <ul class="projects">
+        <li v-for="project in projects" :key="project.title" class="project">
+          <div class="project-main">
+            <p class="project-kind">{{ project.kind }}</p>
+            <h3 class="project-title">{{ project.title }}</h3>
+            <p class="project-desc">{{ project.description }}</p>
 
-            <div class="project-back glass-card">
-              <div class="back-content">
-                <h3>Challenge & Solution</h3>
-                <p>{{ project.description }}</p>
-                
-                <div class="project-results">
-                  <div v-for="result in project.results" :key="result" class="result-item">
-                    <span class="result-check">✓</span>
-                    {{ result }}
-                  </div>
-                </div>
-
-                <div class="project-links">
-                  <a :href="project.github" target="_blank" class="btn btn-outline btn-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.795 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.724-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.838 1.236 1.838 1.237 1.07 1.834 2.809 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.466-1.334-5.466-5.93 0-1.31.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
-                    </svg>
-                    Source
-                  </a>
-                  <a :href="project.link" target="_blank" class="btn btn-primary btn-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/>
-                    </svg>
-                    Visit
-                  </a>
-                </div>
-              </div>
+            <div class="project-links">
+              <a v-if="project.link" :href="project.link" target="_blank" rel="noopener" class="btn btn-primary">
+                Visit site
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
+              </a>
+              <a :href="project.github" target="_blank" rel="noopener" class="btn btn-ghost">
+                View on GitHub
+              </a>
             </div>
           </div>
-        </div>
-      </div>
+
+          <div class="project-side">
+            <p class="side-label">What it does</p>
+            <ul class="project-features">
+              <li v-for="feature in project.features" :key="feature">{{ feature }}</li>
+            </ul>
+
+            <p class="side-label">Built with</p>
+            <ul class="project-stack">
+              <li v-for="tag in project.tags" :key="tag" class="chip">{{ tag }}</li>
+            </ul>
+          </div>
+        </li>
+      </ul>
     </div>
   </section>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
-
-const projectRefs = ref([]);
-
+// `link` is a live URL, or null to hide the "Visit site" button.
 const projects = [
   {
-    title: "E-Commerce Titan",
-    tagline: "High-performance shopping experience",
-    description: "Architected a complete end-to-end e-commerce solution with a focus on security and scalability. Implemented complex product variants and real-time inventory management.",
-    iconSlug: "shopware",
-    gradient: "linear-gradient(135deg, #a855f7, #22d3ee)",
-    tags: ["Laravel", "Vue.js", "Stripe", "MySQL"],
-    results: ["100% Secure Checkout", "Under 2s Page Load", "Automated Invoicing"],
-    github: "https://github.com/adnan21-r",
-    link: "#"
+    title: 'E-Commerce Titan',
+    kind: 'E-commerce platform',
+    description: 'An end-to-end store built with security and scalability in mind, handling complex product variants, real-time inventory and payments.',
+    features: ['Product variants', 'Real-time inventory management', 'Stripe checkout', 'Automated invoicing'],
+    tags: ['Laravel', 'Vue.js', 'Stripe', 'MySQL'],
+    github: 'https://github.com/adnan21-r',
+    link: null,
   },
   {
-    title: "Crisis Control OS",
-    tagline: "Real-time emergency management",
-    description: "Developed a mission-critical system for donor family tracking and resource allocation. Features live geolocation tracking and instant communication protocols.",
-    iconSlug: "googlemaps",
-    gradient: "linear-gradient(135deg, #f472b6, #fbbf24)",
-    tags: ["PHP", "JavaScript", "Google Maps", "WebSockets"],
-    results: ["Real-time Geo-tracking", "Multi-user Coordination", "Instant Alerts"],
-    github: "https://github.com/adnan21-r",
-    link: "#"
+    title: 'Crisis Control OS',
+    kind: 'Emergency management system',
+    description: 'A system for tracking donor families and allocating resources during emergencies, with live geolocation and instant communication between coordinators.',
+    features: ['Live geolocation tracking', 'Multi-user coordination', 'Instant alerts over WebSockets'],
+    tags: ['PHP', 'JavaScript', 'Google Maps', 'WebSockets'],
+    github: 'https://github.com/adnan21-r',
+    link: null,
   },
   {
-    title: "Portfolio Universe",
-    tagline: "The one you are exploring",
-    description: "An immersive 3D experience designed to showcase the intersection of engineering and art. Built with high-performance WebGL and modern Vue architecture.",
-    iconSlug: "threedotjs",
-    gradient: "linear-gradient(135deg, #4ade80, #3b82f6)",
-    tags: ["Nuxt.js", "Three.js", "GSAP", "Custom GLSL"],
-    results: ["Incomparable 3D UX", "Fully Responsive", "SEO Optimized"],
-    github: "https://github.com/adnan21-r",
-    link: "#"
-  }
+    title: 'This portfolio',
+    kind: 'Personal site',
+    description: 'Designed around the idea of a developer as an API: every section is a route, and the landing view sends a request that returns my profile.',
+    features: ['Server-rendered with Nuxt 4', 'Responsive down to small phones', 'Keyboard and reduced-motion friendly'],
+    tags: ['Nuxt 4', 'Vue 3', 'CSS'],
+    github: 'https://github.com/adnan21-r',
+    link: null,
+  },
 ];
-
-const handleMouseMove = (e, index) => {
-  const card = projectRefs.value[index];
-  if (!card) return;
-  
-  const rect = card.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-  
-  const centerX = rect.width / 2;
-  const centerY = rect.height / 2;
-  
-  const rotateX = (y - centerY) / 10;
-  const rotateY = (centerX - x) / 10;
-  
-  card.style.setProperty('--rx', `${rotateX}deg`);
-  card.style.setProperty('--ry', `${rotateY}deg`);
-};
-
-const handleMouseLeave = (index) => {
-  const card = projectRefs.value[index];
-  if (!card) return;
-  card.style.setProperty('--rx', `0deg`);
-  card.style.setProperty('--ry', `0deg`);
-};
 </script>
 
 <style scoped>
-.section-header {
-  text-align: center;
-  margin-bottom: 5rem;
-}
-
-.projects-grid {
+.projects {
+  list-style: none;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 3rem;
+  gap: 1.25rem;
 }
 
-.project-card-3d {
-  perspective: 2000px;
-  height: 500px;
-  cursor: pointer;
-}
-
-.project-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-  transform-style: preserve-3d;
-  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
-}
-
-.project-card-3d:hover .project-inner {
-  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) scale(1.02);
-}
-
-/* Flip on hover for different info */
-.project-card-3d:active .project-inner,
-.project-card-3d.flipped .project-inner {
-  transform: rotateY(180deg);
-}
-
-.project-front, .project-back {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
-  display: flex;
-  flex-direction: column;
+.project {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
   overflow: hidden;
-  border-width: 2px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
-.project-back {
-  transform: rotateY(180deg);
-  padding: 2.5rem;
-  justify-content: center;
+.project:hover {
+  border-color: var(--ink);
+  box-shadow: 0 20px 40px -28px rgba(18, 21, 28, 0.45);
 }
 
-.project-visual {
-  height: 200px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 1.25rem 1.25rem 0 0;
-  margin: -1px -1px 0 -1px;
-}
-
-.project-icon {
-  width: 100px;
-  height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1;
-}
-
-.proj-logo {
-  width: 80%;
-  height: 80%;
-  object-fit: contain;
-  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
-}
-
-.project-number {
-  position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
-  font-family: var(--font-mono);
-  font-size: 1.5rem;
-  font-weight: 800;
-  opacity: 0.2;
-  color: white;
-}
-
-.project-info {
-  padding: 2.5rem;
-  flex: 1;
+.project-main {
+  padding: clamp(1.5rem, 3.5vw, 2.5rem);
   display: flex;
   flex-direction: column;
 }
 
-.project-name {
-  font-size: 1.75rem;
-  font-weight: 800;
-  margin-bottom: 0.5rem;
-}
-
-.project-tagline {
-  color: var(--text-secondary);
-  font-size: 1rem;
-  margin-bottom: 2rem;
-}
-
-.project-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: auto;
-}
-
-.small-tag {
-  font-size: 0.75rem;
+.project-kind {
   font-family: var(--font-mono);
-  padding: 0.25rem 0.75rem;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--border-subtle);
-  border-radius: 4px;
-  color: var(--text-muted);
-}
-
-/* Back Content */
-.back-content h3 {
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-  color: var(--primary-light);
-}
-
-.back-content p {
-  color: var(--text-secondary);
-  line-height: 1.8;
-  margin-bottom: 2rem;
-}
-
-.project-results {
-  margin-bottom: 2.5rem;
-}
-
-.result-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.75rem;
-  font-weight: 500;
-}
-
-.result-check {
+  font-size: 0.68rem;
   color: var(--accent);
-  font-weight: 900;
+  margin-bottom: 0.75rem;
+}
+
+.project-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3.2vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  margin-bottom: 1rem;
+}
+
+.project-desc {
+  color: var(--ink-2);
+  max-width: 36rem;
+  margin-bottom: 1.75rem;
 }
 
 .project-links {
+  margin-top: auto;
   display: flex;
-  gap: 1.5rem;
+  flex-wrap: wrap;
+  gap: 0.6rem;
 }
 
-.btn-icon {
-  flex: 1;
+.project-side {
+  padding: clamp(1.5rem, 3.5vw, 2.5rem);
+  border-left: 1px solid var(--rule);
+  background: var(--canvas);
 }
 
-@media (max-width: 768px) {
-  .projects-grid {
+.side-label {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+}
+
+.project-features {
+  list-style: none;
+  margin-bottom: 1.75rem;
+}
+
+.project-features li {
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed var(--rule);
+  font-size: 0.95rem;
+}
+
+.project-stack {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+@media (max-width: 860px) {
+  .project {
     grid-template-columns: 1fr;
+  }
+
+  .project-side {
+    border-left: none;
+    border-top: 1px solid var(--rule);
   }
 }
 </style>
