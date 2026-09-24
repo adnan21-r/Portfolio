@@ -1,14 +1,16 @@
 <template>
   <section id="contact" class="contact">
     <div class="container">
+      <div v-reveal class="reveal-words">
       <p class="contact-route" translate="no"><span class="method-post">POST</span> /contact</p>
-      <h2 class="contact-title">Have a system that needs building? Let’s talk.</h2>
-      <p class="contact-lede">
+      <h2 class="contact-title"><SplitWords text="Have a system that needs building? Let’s talk." /></h2>
+      </div>
+      <p v-reveal="2" class="contact-lede">
         I’m open to full-time roles and freelance backend work. The fastest way to
         reach me is email, or you can book a short call.
       </p>
 
-      <div class="contact-email">
+      <div v-reveal="3" class="contact-email">
         <a :href="`mailto:${email}`" class="email-link" translate="no">{{ email }}</a>
         <button class="copy-btn" @click="copyEmail">
           {{ copied ? 'Copied' : 'Copy email' }}
@@ -16,7 +18,7 @@
         <span class="visually-hidden" aria-live="polite">{{ copied ? 'Email address copied' : '' }}</span>
       </div>
 
-      <div class="contact-actions">
+      <div v-reveal="4" class="contact-actions">
         <a :href="calendlyUrl" class="btn btn-invert" target="_blank" rel="noopener" @click.prevent="openCalendly">
           Book a call
         </a>
@@ -128,8 +130,14 @@ const openCalendly = async () => {
   transition: color 0.2s ease;
 }
 
+.email-link {
+  background: linear-gradient(currentColor, currentColor) left bottom / 0 1px no-repeat;
+  transition: color 0.2s ease, background-size 0.35s var(--ease-out);
+}
+
 .email-link:hover {
   color: var(--code-key);
+  background-size: 100% 1px;
 }
 
 .copy-btn {

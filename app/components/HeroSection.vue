@@ -2,22 +2,22 @@
   <section class="hero">
     <div class="container hero-grid">
       <div class="hero-copy">
-        <p class="hero-eyebrow">
+        <p class="hero-eyebrow hero-fade" style="--delay: 0ms">
           <span class="status-dot" aria-hidden="true"></span>
           Software developer · Lebanon · Open to new roles
         </p>
 
         <h1 class="hero-title">
-          I build the backend your product <em>stands on.</em>
+          <SplitWords text="I build the backend your product" /> <em><SplitWords text="stands on." :offset="6" /></em>
         </h1>
 
-        <p class="hero-lede">
+        <p class="hero-lede hero-fade" style="--delay: 520ms">
           I’m Adnan Al Rakka. I design Laravel systems, secure REST APIs and the
           Vue.js interfaces that sit on top of them. Currently a software developer
           at Orion Dev.
         </p>
 
-        <div class="hero-actions">
+        <div class="hero-actions hero-fade" style="--delay: 640ms">
           <a href="#projects" class="btn btn-primary">
             See my work
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
@@ -25,12 +25,13 @@
           <a href="mailto:adnanalrakka_2004@hotmail.com" class="btn btn-ghost">Email me</a>
         </div>
 
-        <ul class="hero-social">
+        <ul class="hero-social hero-fade" style="--delay: 740ms">
           <li><a href="https://github.com/adnan21-r" target="_blank" rel="noopener">GitHub</a></li>
           <li><a href="https://www.linkedin.com/in/adnan-al-rakka-978003338" target="_blank" rel="noopener">LinkedIn</a></li>
         </ul>
       </div>
 
+      <div class="hero-side hero-fade" style="--delay: 380ms">
       <div class="client" role="region" translate="no" aria-label="API request returning a profile of Adnan">
         <div class="client-bar">
           <span class="client-method">GET</span>
@@ -51,6 +52,13 @@
         </div>
 
         <pre class="client-body"><code><span v-for="(line, i) in lines" :key="i" class="code-line" :class="{ shown: i < visibleLines }"><span class="ln" aria-hidden="true">{{ i + 1 }}</span><span v-for="(seg, j) in line" :key="j" :class="seg.c">{{ seg.t }}</span></span></code></pre>
+      </div>
+
+      <RequestTrace ref="trace" />
+      <p class="trace-caption" translate="no">
+        <span class="caption-dot" :class="{ busy: state === 'loading' }" aria-hidden="true"></span>
+        Live request trace · press Send to replay
+      </p>
       </div>
     </div>
   </section>
@@ -97,6 +105,7 @@ const buildLines = (obj) => {
 };
 
 const lines = buildLines(profile);
+const trace = ref(null);
 const state = ref('idle');
 const visibleLines = ref(0);
 const latency = ref(0);
@@ -107,11 +116,15 @@ const clearTimers = () => {
   timers = [];
 };
 
-const send = () => {
+const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// The response only renders once the packet in the trace below has made the round trip.
+const send = async () => {
+  if (state.value === 'loading') return;
   clearTimers();
   latency.value = 28 + Math.floor(Math.random() * 60);
 
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  if (prefersReducedMotion()) {
     state.value = 'done';
     visibleLines.value = lines.length;
     return;
@@ -119,15 +132,17 @@ const send = () => {
 
   state.value = 'loading';
   visibleLines.value = 0;
-  timers.push(setTimeout(() => {
-    state.value = 'done';
-    lines.forEach((_, i) => {
-      timers.push(setTimeout(() => { visibleLines.value = i + 1; }, i * 70));
-    });
-  }, 650));
+  await trace.value?.run();
+  state.value = 'done';
+  lines.forEach((_, i) => {
+    timers.push(setTimeout(() => { visibleLines.value = i + 1; }, i * 60));
+  });
 };
 
-onMounted(send);
+// Wait for the entrance sequence to settle before firing the first request.
+onMounted(() => {
+  timers.push(setTimeout(send, prefersReducedMotion() ? 0 : 1100));
+});
 onBeforeUnmount(clearTimers);
 </script>
 
@@ -215,8 +230,59 @@ onBeforeUnmount(clearTimers);
   border-color: var(--accent);
 }
 
+/* Entrance sequence */
+:global([data-motion]) .hero-fade {
+  opacity: 0;
+  animation: hero-in 0.8s var(--ease-out) forwards;
+  animation-delay: var(--delay, 0ms);
+}
+
+:global([data-motion]) .hero-title .w > span {
+  transform: translateY(110%);
+  animation: word-rise 0.9s var(--ease-out) forwards;
+  animation-delay: calc(var(--i) * 55ms + 120ms);
+}
+
+@keyframes hero-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes word-rise {
+  to { transform: none; }
+}
+
 /* API client */
+.hero-side {
+  min-width: 0;
+}
+
+.trace-caption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  color: var(--muted);
+}
+
+.caption-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--get);
+}
+
+.caption-dot.busy {
+  background: var(--accent);
+  animation: blink 0.6s steps(2) infinite;
+}
+
 .client {
+  position: relative;
+  z-index: 1;
   background: var(--code-bg);
   color: var(--code-text);
   border-radius: 14px;

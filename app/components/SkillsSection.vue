@@ -1,17 +1,14 @@
 <template>
   <section id="skills" class="section">
     <div class="container">
-      <div class="section-head">
-        <p class="section-route" translate="no"><span class="method get">GET</span> /skills</p>
-        <h2 class="section-title">What I reach for.</h2>
-      </div>
+      <SectionHead path="/skills" title="What I reach for." />
 
       <div class="stack-grid">
-        <div v-for="group in groups" :key="group.label" class="stack-group">
+        <div v-for="(group, g) in groups" :key="group.label" v-reveal="g" class="stack-group">
           <h3 class="group-label">{{ group.label }}</h3>
           <p class="group-hint">{{ group.hint }}</p>
           <ul class="group-items">
-            <li v-for="item in group.items" :key="item">{{ item }}</li>
+            <li v-for="(item, i) in group.items" :key="item" :style="{ '--i': i + g * 2 }">{{ item }}</li>
           </ul>
         </div>
       </div>
@@ -75,11 +72,42 @@ const groups = [
 }
 
 .group-items li {
+  position: relative;
+  cursor: default;
   font-family: var(--font-display);
   font-size: clamp(1.25rem, 2.2vw, 1.6rem);
   font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.35;
+}
+
+.group-items li::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.1em;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s var(--ease-out);
+}
+
+.group-items li:hover::after {
+  transform: none;
+}
+
+:global([data-motion]) .stack-group li {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+  transition-delay: calc(var(--i) * 40ms + 200ms);
+}
+
+:global([data-motion]) .stack-group.is-in li {
+  opacity: 1;
+  transform: none;
 }
 
 @media (max-width: 860px) {

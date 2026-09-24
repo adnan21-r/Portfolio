@@ -1,13 +1,16 @@
 <template>
   <section id="projects" class="section">
     <div class="container">
-      <div class="section-head">
-        <p class="section-route" translate="no"><span class="method get">GET</span> /projects</p>
-        <h2 class="section-title">Selected work.</h2>
-      </div>
+      <SectionHead path="/projects" title="Selected work." />
 
       <ul class="projects">
-        <li v-for="project in projects" :key="project.title" class="project">
+        <li
+          v-for="project in projects"
+          :key="project.title"
+          v-reveal
+          class="project"
+          @pointermove="spotlight"
+        >
           <div class="project-main">
             <p class="project-kind">{{ project.kind }}</p>
             <h3 class="project-title">{{ project.title }}</h3>
@@ -27,7 +30,7 @@
           <div class="project-side">
             <p class="side-label">What it does</p>
             <ul class="project-features">
-              <li v-for="feature in project.features" :key="feature">{{ feature }}</li>
+              <li v-for="(feature, i) in project.features" :key="feature" :style="{ '--i': i }">{{ feature }}</li>
             </ul>
 
             <p class="side-label">Built with</p>
@@ -42,6 +45,13 @@
 </template>
 
 <script setup>
+// Light follows the cursor across the card.
+const spotlight = (e) => {
+  const rect = e.currentTarget.getBoundingClientRect();
+  e.currentTarget.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+  e.currentTarget.style.setProperty('--my', `${e.clientY - rect.top}px`);
+};
+
 // `link` is a live URL, or null to hide the "Visit site" button.
 const projects = [
   {
@@ -82,6 +92,8 @@ const projects = [
 }
 
 .project {
+  position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
   background: var(--surface);
@@ -91,9 +103,44 @@ const projects = [
   transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
+.project::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(42, 68, 230, 0.09), transparent 65%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
 .project:hover {
   border-color: var(--ink);
-  box-shadow: 0 20px 40px -28px rgba(18, 21, 28, 0.45);
+  box-shadow: 0 24px 48px -30px rgba(18, 21, 28, 0.5);
+}
+
+.project:hover::before {
+  opacity: 1;
+}
+
+.project-title {
+  transition: color 0.25s ease;
+}
+
+.project:hover .project-title {
+  color: var(--accent);
+}
+
+:global([data-motion]) .project-features li {
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+  transition-delay: calc(var(--i) * 80ms + 300ms);
+}
+
+:global([data-motion]) .project.is-in .project-features li {
+  opacity: 1;
+  transform: none;
 }
 
 .project-main {

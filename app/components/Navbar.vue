@@ -6,7 +6,15 @@
       </a>
 
       <nav id="site-nav" class="nav-menu" translate="no" :class="{ open: menuOpen }" aria-label="Sections">
-        <a v-for="link in links" :key="link.href" :href="link.href" class="nav-link" @click="closeMenu">
+        <a
+          v-for="link in links"
+          :key="link.href"
+          :href="link.href"
+          class="nav-link"
+          :class="{ active: active === link.href }"
+          :aria-current="active === link.href ? 'location' : undefined"
+          @click="closeMenu"
+        >
           <span class="method get">GET</span>{{ link.path }}
         </a>
         <a href="#contact" class="nav-link nav-cta" @click="closeMenu">
@@ -26,6 +34,7 @@
         <span></span>
       </button>
     </div>
+    <div class="nav-progress" :style="{ transform: `scaleX(${progress})` }" aria-hidden="true"></div>
   </header>
 </template>
 
@@ -40,6 +49,10 @@ const links = [
 ];
 
 const isScrolled = ref(false);
+const progress = ref(0);
+const active = ref('');
+let spy = null;
+let ticking = false;
 const menuOpen = ref(false);
 
 const closeMenu = () => menuOpen.value = false;
@@ -49,17 +62,33 @@ const onKeydown = (e) => {
 };
 
 const handleScroll = () => {
-  isScrolled.value = window.scrollY > 24;
+  if (ticking) return;
+  ticking = true;
+  requestAnimationFrame(() => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    isScrolled.value = window.scrollY > 24;
+    progress.value = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
+    ticking = false;
+  });
 };
 
 onMounted(() => {
   handleScroll();
   window.addEventListener('scroll', handleScroll, { passive: true });
   window.addEventListener('keydown', onKeydown);
+
+  // Highlight the link for the section crossing the middle of the viewport.
+  spy = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) active.value = `#${entry.target.id}`;
+    }
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  document.querySelectorAll('main section[id]').forEach((el) => spy.observe(el));
 });
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScroll);
   window.removeEventListener('keydown', onKeydown);
+  spy?.disconnect();
 });
 </script>
 
@@ -121,6 +150,23 @@ onBeforeUnmount(() => {
 .nav-link:hover {
   color: var(--ink);
   background: var(--surface);
+}
+
+.nav-link.active {
+  color: var(--ink);
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+.nav-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--accent);
+  transform-origin: left;
+  pointer-events: none;
 }
 
 .nav-cta {

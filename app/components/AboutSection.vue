@@ -1,13 +1,10 @@
 <template>
   <section id="about" class="section">
     <div class="container">
-      <div class="section-head">
-        <p class="section-route" translate="no"><span class="method get">GET</span> /about</p>
-        <h2 class="section-title">The parts of a product most people never see.</h2>
-      </div>
+      <SectionHead path="/about" title="The parts of a product most people never see." />
 
       <div class="about-grid">
-        <div class="about-text">
+        <div v-reveal class="about-text">
           <p>
             I’m a software developer who enjoys the unglamorous core of an application:
             the data model, the permission rules, and the API contract that other teams
@@ -20,7 +17,7 @@
           </p>
         </div>
 
-        <dl class="record" aria-label="Profile">
+        <dl v-reveal="2" class="record" aria-label="Profile">
           <div v-for="row in facts" :key="row.key" class="record-row">
             <dt>{{ row.key }}</dt>
             <dd>

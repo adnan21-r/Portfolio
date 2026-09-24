@@ -35,6 +35,9 @@
     --gutter: clamp(1rem, 4vw, 3rem);
     --section-space: clamp(5rem, 11vw, 9rem);
     --radius: 10px;
+
+    /* Motion */
+    --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 *,
@@ -164,6 +167,18 @@ h3 {
     transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn svg {
+    transition: transform 0.25s var(--ease-out);
+}
+
+.btn:hover svg {
+    transform: translate(2px, -2px);
+}
+
 .btn-primary {
     background: var(--ink);
     color: var(--surface);
@@ -184,6 +199,25 @@ h3 {
     background: var(--surface);
 }
 
+.section-route {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 0.5rem;
+}
+
+.route-status {
+    color: var(--get);
+    opacity: 0;
+    transform: translateX(-6px);
+    transition: opacity 0.35s var(--ease-out), transform 0.35s var(--ease-out);
+}
+
+.route-status.on {
+    opacity: 1;
+    transform: none;
+}
+
 .chip {
     display: inline-block;
     font-family: var(--font-mono);
@@ -202,6 +236,54 @@ h3 {
     overflow: hidden;
     clip: rect(0 0 0 0);
     white-space: nowrap;
+}
+
+/* Word masks (see SplitWords.vue) */
+.w {
+    display: inline-block;
+    vertical-align: top;
+    overflow: hidden;
+    /* room for descenders inside the mask */
+    padding-bottom: 0.12em;
+    margin-bottom: -0.12em;
+}
+
+.w > span {
+    display: inline-block;
+}
+
+/* Entrance motion, only when <html data-motion> is set (no reduced-motion preference) */
+[data-motion] [data-reveal]:not(.reveal-words) {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+        opacity 0.7s var(--ease-out),
+        transform 0.7s var(--ease-out);
+    transition-delay: calc(var(--d, 0) * 90ms);
+}
+
+[data-motion] [data-reveal].is-in:not(.reveal-words) {
+    opacity: 1;
+    transform: none;
+}
+
+[data-motion] .reveal-words .w > span {
+    transform: translateY(110%);
+    transition: transform 0.85s var(--ease-out);
+    transition-delay: calc(var(--i, 0) * 45ms + 120ms);
+}
+
+[data-motion] .reveal-words.is-in .w > span {
+    transform: none;
+}
+
+[data-motion] .reveal-words .section-route {
+    opacity: 0;
+    transition: opacity 0.5s ease-out;
+}
+
+[data-motion] .reveal-words.is-in .section-route {
+    opacity: 1;
 }
 
 @media (max-width: 800px) {

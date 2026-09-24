@@ -1,16 +1,17 @@
 <template>
   <section id="experience" class="section">
     <div class="container">
-      <div class="section-head">
-        <p class="section-route" translate="no"><span class="method get">GET</span> /experience</p>
-        <h2 class="section-title">Where I’ve shipped production code.</h2>
-      </div>
+      <SectionHead path="/experience" title="Where I’ve shipped production code." />
 
       <ol class="jobs">
-        <li v-for="job in jobs" :key="job.migration" class="job">
+        <li v-for="(job, i) in jobs" :key="job.migration" v-reveal class="job" @reveal="migrate(i)">
           <div class="job-when">
             <p class="job-date">{{ job.date }}</p>
-            <p class="job-migration">{{ job.migration }}</p>
+            <p class="job-migration" translate="no">{{ job.migration }}</p>
+            <p class="job-run" :class="{ ran: ran[i] }" translate="no" aria-hidden="true">
+              <span class="run-dots"></span>
+              <span class="run-done">{{ job.ms }}ms DONE</span>
+            </p>
             <span v-if="job.current" class="job-current">Current</span>
           </div>
 
@@ -41,6 +42,7 @@ const jobs = [
     date: 'Jun 2025 – Present',
     current: true,
     migration: '2025_06_01_join_orion_dev.php',
+    ms: 14,
     tasks: [
       'Build Laravel + Livewire systems with Vue.js front-end integration',
       'Design and document secure RESTful APIs, shipped with Postman collections for consuming teams',
@@ -55,6 +57,7 @@ const jobs = [
     type: 'Remote',
     date: 'Mar 2025 – Sep 2025',
     migration: '2025_03_01_join_xpertbot.php',
+    ms: 9,
     tasks: [
       'Proposed and built scalable backend services in Laravel',
       'Produced ERDs, migrations, models and authentication APIs',
@@ -64,6 +67,12 @@ const jobs = [
     stack: ['Laravel', 'PHP', 'MySQL', 'JWT Auth', 'REST APIs', 'Git'],
   },
 ];
+
+// Each role "runs" like `php artisan migrate` when it scrolls into view.
+const ran = reactive([]);
+const migrate = (i) => {
+  setTimeout(() => { ran[i] = true; }, 350);
+};
 </script>
 
 <style scoped>
@@ -94,6 +103,38 @@ const jobs = [
   font-size: 0.66rem;
   color: var(--muted);
   word-break: break-all;
+}
+
+.job-run {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin-top: 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--muted);
+}
+
+.run-dots {
+  flex: 1;
+  border-bottom: 1px dotted var(--muted);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.run-done {
+  color: var(--get);
+  opacity: 0;
+  transition: opacity 0.3s ease 0.55s;
+}
+
+.job-run.ran .run-dots {
+  transform: none;
+}
+
+.job-run.ran .run-done {
+  opacity: 1;
 }
 
 .job-current {
