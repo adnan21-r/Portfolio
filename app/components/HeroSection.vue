@@ -237,19 +237,9 @@ onBeforeUnmount(clearTimers);
   animation-delay: var(--delay, 0ms);
 }
 
-:global([data-motion]) .hero-title .w > span {
-  transform: translateY(110%);
-  animation: word-rise 0.9s var(--ease-out) forwards;
-  animation-delay: calc(var(--i) * 55ms + 120ms);
-}
-
 @keyframes hero-in {
   from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: none; }
-}
-
-@keyframes word-rise {
-  to { transform: none; }
 }
 
 /* API client */

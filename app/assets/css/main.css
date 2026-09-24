@@ -277,6 +277,19 @@ h3 {
     transform: none;
 }
 
+/* Hero headline rises on load (words come from SplitWords, so this can't be scoped) */
+[data-motion] .hero-title .w > span {
+    transform: translateY(110%);
+    animation: word-rise 0.9s var(--ease-out) forwards;
+    animation-delay: calc(var(--i) * 55ms + 120ms);
+}
+
+@keyframes word-rise {
+    to {
+        transform: none;
+    }
+}
+
 [data-motion] .reveal-words .section-route {
     opacity: 0;
     transition: opacity 0.5s ease-out;
